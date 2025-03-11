@@ -1,0 +1,7 @@
+{
+  "name": "budget-tracker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
