@@ -22,8 +22,7 @@ import {
   IonRow,
   IonCol,
   IonList,
-  IonThumbnail,
-  IonItemDivider
+  IonThumbnail
 } from '@ionic/react';
 import { 
   logOut, 
@@ -36,7 +35,9 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { t } from '../contexts/LanguageContext';
-import { checkAuthStatus, supabase } from '../services/supabaseService';
+
+// ✅ Fixed import structure based on `supabaseService.ts`
+import supabase, { checkAuthStatus } from '../services/supabaseService';
 
 const ProfileScreen: React.FC = () => {
   const { user, signOut } = useAuth();
@@ -65,7 +66,6 @@ const ProfileScreen: React.FC = () => {
     try {
       setLoading(true);
       await signOut();
-      // Navigation will be handled by the router based on auth state
       history.push('/login');
     } catch (error) {
       console.error('Error signing out:', error);
@@ -104,14 +104,12 @@ const ProfileScreen: React.FC = () => {
       </IonHeader>
       
       <IonContent className="ion-padding">
-        {/* App Logo */}
         <div className="ion-text-center ion-padding">
           <IonThumbnail style={{ margin: '0 auto', width: '150px', height: '40px' }}>
             <img src="assets/logo.png" alt="Logo" />
           </IonThumbnail>
         </div>
         
-        {/* User Profile */}
         <IonCard color="light">
           <IonCardContent className="ion-text-center ion-padding">
             <IonAvatar style={{ margin: '0 auto', width: '80px', height: '80px', backgroundColor: '#062644', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -123,7 +121,6 @@ const ProfileScreen: React.FC = () => {
           </IonCardContent>
         </IonCard>
         
-        {/* Account Information */}
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>{t('Account Information')}</IonCardTitle>
@@ -143,7 +140,6 @@ const ProfileScreen: React.FC = () => {
           </IonList>
         </IonCard>
         
-        {/* App Settings */}
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>{t('App Settings')}</IonCardTitle>
@@ -166,7 +162,6 @@ const ProfileScreen: React.FC = () => {
           </IonList>
         </IonCard>
         
-        {/* Account Actions */}
         <IonButton 
           expand="block" 
           className="ion-margin-top"

@@ -120,7 +120,7 @@ const AddBudgetScreen: React.FC = () => {
             }
           }}
           header={alertHeader}
-          message={alertMessage}
+          message={alertMessage || ''}
           buttons={[t('OK')]}
         />
       </IonContent>

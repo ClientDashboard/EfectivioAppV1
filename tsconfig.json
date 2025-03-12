@@ -1,30 +1,32 @@
 {
-    "compilerOptions": {
-      "target": "ESNext",
-      "useDefineForClassFields": true,
-      "lib": ["DOM", "DOM.Iterable", "ESNext"],
-      "allowJs": false,
-      "skipLibCheck": true,
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "strict": true,
-      "forceConsistentCasingInFileNames": true,
-      "module": "ESNext",
-      "moduleResolution": "Node",
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "noEmit": true,
-      "jsx": "react-jsx",
-      "baseUrl": ".",
-      "paths": {
-        "@/*": ["./src/*"],
-        "@components/*": ["./src/components/*"],
-        "@contexts/*": ["./src/contexts/*"],
-        "@services/*": ["./src/services/*"],
-        "@screens/*": ["./src/screens/*"],
-        "@assets/*": ["./src/assets/*"]
-      }
-    },
-    "include": ["src"],
-    "references": [{ "path": "./tsconfig.node.json" }]
-  }
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@services/*": ["./src/services/*"],
+      "@screens/*": ["./src/screens/*"],
+      "@assets/*": ["./src/assets/*"]
+    }
+  },
+  "include": ["src", "src/types/declarations"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

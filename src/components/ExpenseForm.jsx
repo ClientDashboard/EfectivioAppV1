@@ -1,271 +1,242 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  IonContent, 
-  IonItem, 
-  IonLabel, 
-  IonInput, 
-  IonButton, 
+import {
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonInput,
   IonSelect,
   IonSelectOption,
+  IonDatetime,
+  IonButton,
+  IonTextarea,
   IonLoading,
-  IonList,
-  IonText,
-  IonSpinner
+  IonGrid,
+  IonRow,
+  IonCol
 } from '@ionic/react';
-import PropTypes from 'prop-types';
+import { t } from '../contexts/LanguageContext';
 import { getBudgets } from '../services/supabaseService';
-import { useLanguage } from '../contexts/LanguageContext';
 
-/**
- * ExpenseForm component for creating or editing expenses using Ionic components
- * 
- * @param {Object} expense - Existing expense data (for editing)
- * @param {Function} onSubmit - Function to call when form is submitted
- * @param {boolean} isLoading - Whether the form is in a loading state
- */
-const ExpenseForm = ({ 
-  expense = {}, 
-  onSubmit, 
-  isLoading = false 
-}) => {
-  const { t } = useLanguage();
-  
-  // Format date string YYYY-MM-DD
-  const formatDateString = (date) => {
-    if (!date) return '';
-    
-    const d = new Date(date);
-    // Check if date is valid
-    if (isNaN(d.getTime())) return '';
-    
-    const year = d.getFullYear();
-    // Month is 0-based, so add 1 and pad with leading zero if needed
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}`;
-  };
-  
-  // Initialize form with expense data or defaults
+const ExpenseForm = ({ expense, onSubmit, isLoading }) => {
   const [formData, setFormData] = useState({
-    amount: expense.amount ? expense.amount.toString() : '',
-    category: expense.category || '',
-    date: formatDateString(expense.date) || formatDateString(new Date()),
-    description: expense.description || '',
-    budget_id: expense.budget_id || ''
+    amount: '',
+    description: '',
+    category: '',
+    date: new Date().toISOString().split('T')[0],
+    budget_id: '',
   });
 
-  // State for budgets
   const [budgets, setBudgets] = useState([]);
-  const [loadingBudgets, setLoadingBudgets] = useState(false);
-  
-  // State for validation errors
-  const [errors, setErrors] = useState({});
-  
-  // Define expense categories
+  const [loading, setLoading] = useState(false);
+
   const categories = [
-    'Food & Dining',
-    'Shopping',
-    'Housing',
+    'Food',
     'Transportation',
-    'Utilities',
-    'Healthcare',
-    'Personal',
+    'Housing',
     'Entertainment',
-    'Travel',
+    'Healthcare',
     'Education',
-    'Debt Payments',
-    'Investments',
+    'Shopping',
+    'Utilities',
+    'Travel',
     'Other'
   ];
-  
-  // Fetch budgets for dropdown
+
   useEffect(() => {
-    const loadBudgets = async () => {
-      try {
-        setLoadingBudgets(true);
-        const data = await getBudgets();
-        setBudgets(data || []);
-      } catch (err) {
-        console.error('Error loading budgets:', err);
-      } finally {
-        setLoadingBudgets(false);
-      }
-    };
-    
     loadBudgets();
   }, []);
-  
-  // Handle text input changes
-  const handleChange = (name, value) => {
+
+  useEffect(() => {
+    if (expense) {
+      setFormData({
+        amount: expense.amount?.toString() || '',
+        description: expense.description || '',
+        category: expense.category || '',
+        date: expense.date || new Date().toISOString().split('T')[0],
+        budget_id: expense.budget_id || '',
+      });
+    }
+  }, [expense]);
+
+  const loadBudgets = async () => {
+    try {
+      setLoading(true);
+      const budgetData = await getBudgets();
+      setBudgets(budgetData);
+    } catch (error) {
+      console.error('Error loading budgets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    
-    // Clear error when field is edited
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: null
-      }));
-    }
   };
-  
-  // Validate the form
-  const validateForm = () => {
-    const newErrors = {};
+
+  const handleSelectChange = (name, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleDateChange = (value) => {
+    // Format date to YYYY-MM-DD
+    const formattedDate = value.split('T')[0];
+    setFormData(prev => ({
+      ...prev,
+      date: formattedDate
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     
-    const amount = parseFloat(formData.amount);
-    if (!formData.amount || isNaN(amount) || amount <= 0) {
-      newErrors.amount = t('Enter a valid amount');
+    // Validation
+    if (!formData.amount) {
+      alert(t('Please enter an amount'));
+      return;
+    }
+    
+    if (!formData.description) {
+      alert(t('Please enter a description'));
+      return;
     }
     
     if (!formData.category) {
-      newErrors.category = t('Please select a category');
+      alert(t('Please select a category'));
+      return;
     }
     
-    // Validate date format (YYYY-MM-DD)
-    if (!formData.date || !/^\d{4}-\d{2}-\d{2}$/.test(formData.date)) {
-      newErrors.date = t('Enter a valid date (YYYY-MM-DD)');
+    if (!formData.date) {
+      alert(t('Please select a date'));
+      return;
     }
     
-    if (!formData.description.trim()) {
-      newErrors.description = t('Description is required');
-    }
+    // Convert amount to number
+    const parsedData = {
+      ...formData,
+      amount: parseFloat(formData.amount)
+    };
     
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    onSubmit(parsedData);
   };
-  
-  // Set date to today
-  const handleSetToday = () => {
-    handleChange('date', formatDateString(new Date()));
-  };
-  
-  // Handle form submission
-  const handleSubmit = () => {
-    if (validateForm()) {
-      // Format the data for submission
-      const submissionData = {
-        ...formData,
-        amount: parseFloat(formData.amount),
-        // Keep date as YYYY-MM-DD string
-        date: formData.date
-      };
-      
-      // If budget_id is empty string, set to null
-      if (submissionData.budget_id === '') {
-        submissionData.budget_id = null;
-      }
-      
-      // Add ID if editing an existing expense
-      if (expense.id) {
-        submissionData.id = expense.id;
-      }
-      
-      onSubmit(submissionData);
-    }
-  };
-  
+
   return (
-    <IonContent className="ion-padding">
-      <IonList>
-        <IonItem>
-          <IonLabel position="stacked">{t('Amount')} *</IonLabel>
-          <IonInput
-            value={formData.amount}
-            onIonChange={(e) => handleChange('amount', e.detail.value)}
-            placeholder="0.00"
-            type="number"
-            disabled={isLoading}
-            className={errors.amount ? 'ion-invalid' : ''}
-          />
-          {errors.amount && <IonText color="danger">{errors.amount}</IonText>}
-        </IonItem>
-        
-        <IonItem>
-          <IonLabel position="stacked">{t('Date')} * (YYYY-MM-DD)</IonLabel>
-          <div style={{ display: 'flex' }}>
-            <IonInput
-              value={formData.date}
-              onIonChange={(e) => handleChange('date', e.detail.value)}
-              placeholder="YYYY-MM-DD"
-              disabled={isLoading}
-              className={errors.date ? 'ion-invalid' : ''}
-            />
-            <IonButton 
-              size="small" 
-              fill="clear" 
-              onClick={handleSetToday} 
-              disabled={isLoading}
-            >
-              {t('Today')}
-            </IonButton>
-          </div>
-          {errors.date && <IonText color="danger">{errors.date}</IonText>}
-        </IonItem>
-        
-        <IonItem>
-          <IonLabel position="stacked">{t('Category')} *</IonLabel>
-          <IonSelect
-            value={formData.category}
-            onIonChange={(e) => handleChange('category', e.detail.value)}
-            placeholder={t('Select a category')}
-            disabled={isLoading}
-            className={errors.category ? 'ion-invalid' : ''}
-          >
-            {categories.map(category => (
-              <IonSelectOption key={category} value={category}>
-                {category}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
-          {errors.category && <IonText color="danger">{errors.category}</IonText>}
-        </IonItem>
-        
-        <IonItem>
-          <IonLabel position="stacked">{t('Budget')} ({t('Optional')})</IonLabel>
-          {loadingBudgets ? (
-            <IonSpinner name="dots" />
-          ) : (
-            <IonSelect
-              value={formData.budget_id}
-              onIonChange={(e) => handleChange('budget_id', e.detail.value)}
-              placeholder={t('No Budget')}
-              disabled={isLoading || loadingBudgets}
-            >
-              <IonSelectOption value="">{t('No Budget')}</IonSelectOption>
-              {budgets.map(budget => (
-                <IonSelectOption key={budget.id} value={budget.id}>
-                  {budget.name}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-          )}
-        </IonItem>
-        
-        <IonItem>
-          <IonLabel position="stacked">{t('Description')} *</IonLabel>
-          <IonInput
-            value={formData.description}
-            onIonChange={(e) => handleChange('description', e.detail.value)}
-            placeholder={t('Enter a description')}
-            disabled={isLoading}
-            maxlength={100}
-            className={errors.description ? 'ion-invalid' : ''}
-          />
-          {errors.description && <IonText color="danger">{errors.description}</IonText>}
-        </IonItem>
-      </IonList>
-      
-      <IonButton
-        expand="block"
-        onClick={handleSubmit}
-        disabled={isLoading}
-        className="ion-margin-top"
-      >
-        {expense.id ? t('Update Expense') : t('Add Expense')}
-      </IonButton>
+    <div className="ion-padding">
+      <form onSubmit={handleSubmit}>
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="floating">{t('Amount')}</IonLabel>
+                <IonInput
+                  type="number"
+                  name="amount"
+                  value={formData.amount}
+                  onIonChange={e => handleChange({
+                    target: { name: 'amount', value: e.detail.value }
+                  })}
+                  required
+                  min="0.01"
+                  step="0.01"
+                />
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="floating">{t('Description')}</IonLabel>
+                <IonInput
+                  type="text"
+                  name="description"
+                  value={formData.description}
+                  onIonChange={e => handleChange({
+                    target: { name: 'description', value: e.detail.value }
+                  })}
+                  required
+                />
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel>{t('Category')}</IonLabel>
+                <IonSelect
+                  value={formData.category}
+                  onIonChange={e => handleSelectChange('category', e.detail.value)}
+                  placeholder={t('Select a category')}
+                >
+                  {categories.map(category => (
+                    <IonSelectOption key={category} value={category}>
+                      {t(category)}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel>{t('Date')}</IonLabel>
+                <IonDatetime
+                  displayFormat="YYYY-MM-DD"
+                  value={formData.date}
+                  onIonChange={e => handleDateChange(e.detail.value)}
+                  max={new Date().toISOString()}
+                />
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel>{t('Budget')}</IonLabel>
+                <IonSelect
+                  value={formData.budget_id}
+                  onIonChange={e => handleSelectChange('budget_id', e.detail.value)}
+                  placeholder={t('Select a budget (optional)')}
+                >
+                  <IonSelectOption value="">{t('None')}</IonSelectOption>
+                  {budgets.map(budget => (
+                    <IonSelectOption key={budget.id} value={budget.id}>
+                      {budget.name}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          
+          <IonRow>
+            <IonCol>
+              <IonButton
+                expand="block"
+                type="submit"
+                disabled={isLoading}
+              >
+                {t(expense ? 'Update Expense' : 'Add Expense')}
+              </IonButton>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+      </form>
       
       <IonLoading isOpen={isLoading} message={t('Please wait...')} />
+    </div>
+  );
+};
+
+export default ExpenseForm;

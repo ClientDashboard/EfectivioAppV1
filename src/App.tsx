@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Redirect, Route, RouteProps } from 'react-router-dom';
 import { 
   IonApp, 
   IonRouterOutlet, 
@@ -8,6 +8,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { useAuth } from './contexts/AuthContext';
+import { LanguageProvider } from './contexts/LanguageContext'; // Add this import
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -53,34 +54,36 @@ const App: React.FC = () => {
       <IonApp>
         <IonLoading
           isOpen={true}
-          message="Loading..."
+          message={"Loading..."}
         />
       </IonApp>
     );
   }
 
   return (
-    <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          {/* Auth Routes */}
-          <Route exact path="/login">
-            {user ? <Redirect to="/dashboard" /> : <LoginScreen />}
-          </Route>
-          <Route exact path="/signup">
-            {user ? <Redirect to="/dashboard" /> : <SignupScreen />}
-          </Route>
-          <Route exact path="/forgot-password">
-            {user ? <Redirect to="/dashboard" /> : <ForgotPasswordScreen />}
-          </Route>
-          
-          {/* Protected Routes */}
-          <Route path="/">
-            {!user ? <Redirect to="/login" /> : <AppRoutes />}
-          </Route>
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonApp>
+    <LanguageProvider>
+      <IonApp>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            {/* Auth Routes */}
+            <Route exact path="/login" render={() => (
+              user ? <Redirect to="/dashboard" /> : <LoginScreen />
+            )} />
+            <Route exact path="/signup" render={() => (
+              user ? <Redirect to="/dashboard" /> : <SignupScreen />
+            )} />
+            <Route exact path="/forgot-password" render={() => (
+              user ? <Redirect to="/dashboard" /> : <ForgotPasswordScreen />
+            )} />
+            
+            {/* Protected Routes */}
+            <Route path="/" render={() => (
+              !user ? <Redirect to="/login" /> : <AppRoutes />
+            )} />
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </IonApp>
+    </LanguageProvider>
   );
 };
 

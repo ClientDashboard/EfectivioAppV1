@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { supabase } from '../utils/supabaseClient';
+import { supabase } from '../utils/supabaseClient'; // ✅ Fixed import (removed .ts)
 
 const AuthContext = createContext();
 
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
     checkSession();
 
     // Listen for auth changes
-    const { data: { subscription }} = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
         setUser(session?.user || null);
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, []);
 
   // Auth functions
@@ -68,6 +68,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      setUser(null);
+      setSession(null);
       return { error: null };
     } catch (error) {
       return { error };
@@ -97,3 +99,5 @@ export const useAuth = () => {
   }
   return context;
 };
+
+export default AuthProvider; // ✅ Added export for modular usage

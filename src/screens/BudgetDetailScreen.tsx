@@ -24,8 +24,8 @@ import { add } from 'ionicons/icons';
 import { useParams, useHistory } from 'react-router-dom';
 import { getBudgetById, getExpenses, deleteExpense, getBudgetSpending } from '../services/supabaseService';
 import { t } from '../contexts/LanguageContext';
-import { BudgetCard, ExpenseList, ChartComponent } from '../components';
-
+import { BudgetCard, ChartComponent } from '../components';
+import CustomExpenseList from "../components/CustomExpenseList";
 interface RouteParams {
   id: string;
 }
@@ -203,7 +203,7 @@ const BudgetDetailScreen: React.FC = () => {
             <IonTitle size="large">{t('Budget Expenses')}</IonTitle>
           </IonCardHeader>
           <IonCardContent>
-            <ExpenseList
+            <CustomExpenseList
               expenses={expenses}
               onDelete={confirmDeleteExpense}
               onEdit={(id: string) => history.push(`/expenses/edit/${id}?budgetId=${budgetId}`)}
