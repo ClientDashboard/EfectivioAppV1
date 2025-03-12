@@ -1,0 +1,6 @@
+/* Fix for aria-hidden accessibility issue */
+ion-backdrop[aria-hidden="true"] {
+    inert: true;
+    /* Remove aria-hidden as we're using inert instead */
+    aria-hidden: unset;
+  }

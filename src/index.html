@@ -1,0 +1,30 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Function to fix backdrops
+    function fixBackdrops() {
+      document.querySelectorAll('ion-backdrop[aria-hidden="true"]').forEach(backdrop => {
+        // Remove aria-hidden and use inert instead for better accessibility
+        backdrop.removeAttribute('aria-hidden');
+        backdrop.setAttribute('inert', '');
+      });
+    }
+    
+    // Run initially and whenever DOM changes
+    fixBackdrops();
+    
+    // Watch for new backdrops being added
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.addedNodes.length) {
+          fixBackdrops();
+        }
+      });
+    });
+    
+    // Start observing the document
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true 
+    });
+  });
+</script>
