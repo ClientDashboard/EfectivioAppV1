@@ -1,0 +1,6 @@
+{
+  "appId": "com.example.efectivio",
+  "appName": "Efectivio-App",
+  "webDir": "build",
+  "bundledWebRuntime": false
+}
