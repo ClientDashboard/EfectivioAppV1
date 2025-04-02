@@ -1,4 +1,5 @@
 PODS:
+<<<<<<< HEAD
   - Capacitor (5.5.0):
     - CapacitorCordova
   - CapacitorCamera (5.0.7):
@@ -8,21 +9,39 @@ PODS:
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+=======
+  - Capacitor (7.0.1):
+    - CapacitorCordova
+  - CapacitorCordova (7.0.1)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+>>>>>>> 1dfb46994cd0d8b194efbe9a6105231cb35a1ec7
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
 
 EXTERNAL SOURCES:
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
+<<<<<<< HEAD
   CapacitorCamera:
     :path: "../../node_modules/@capacitor/camera"
+=======
+>>>>>>> 1dfb46994cd0d8b194efbe9a6105231cb35a1ec7
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
 
 SPEC CHECKSUMS:
+<<<<<<< HEAD
   Capacitor: 018b78e70c892da9e2ca16481978c3ce09fa491a
   CapacitorCamera: d0197014a35cff3a591f0da7f04fba3e2f5f9be8
   CapacitorCordova: 3d3908a3d208a11a75f9df3b18c4405c4de76e1d
 
 PODFILE CHECKSUM: 39250892ef0344d4847cd4c683520cd02a8223b6
+=======
+  Capacitor: de199cba6c8b20995428ad0b7cb0bc6ca625ffd4
+  CapacitorCordova: 63d476958d5022d76f197031e8b7ea3519988c64
+
+PODFILE CHECKSUM: 4d954272bbb5a9b46b12e798690a0347c3c275a6
+>>>>>>> 1dfb46994cd0d8b194efbe9a6105231cb35a1ec7
 
 COCOAPODS: 1.16.2

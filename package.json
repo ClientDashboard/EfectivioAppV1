@@ -1,4 +1,4 @@
-{
+
   "name": "efectivio-app",
   "version": "0.1.0",
   "private": true,
@@ -50,4 +50,3 @@
   "devDependencies": {
     "@capacitor/cli": "5.5.0"
   }
-}

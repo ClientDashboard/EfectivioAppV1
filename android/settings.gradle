@@ -2,7 +2,11 @@ include ':app'
 include ':capacitor-cordova-android-plugins'
 project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
 
+<<<<<<< HEAD
 include ':capacitor-android'
 project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/android')
 
 apply from: 'capacitor.settings.gradle'
+=======
+apply from: 'capacitor.settings.gradle'
+>>>>>>> 1dfb46994cd0d8b194efbe9a6105231cb35a1ec7

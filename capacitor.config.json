@@ -1,6 +1,16 @@
 {
+<<<<<<< HEAD
   "appId": "com.example.efectivio",
   "appName": "Efectivio-App",
   "webDir": "build",
   "bundledWebRuntime": false
 }
+=======
+  "appId": "com.efectivio.app",
+  "appName": "EfectivioApp",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
+>>>>>>> 1dfb46994cd0d8b194efbe9a6105231cb35a1ec7

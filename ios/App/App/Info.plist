@@ -5,7 +5,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
+<<<<<<< HEAD
         <string>Efectivio-App</string>
+=======
+        <string>Budget Tracker</string>
+>>>>>>> 1dfb46994cd0d8b194efbe9a6105231cb35a1ec7
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

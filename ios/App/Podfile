@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
 
 platform :ios, '13.0'
@@ -21,4 +22,16 @@ end
 
 post_install do |installer|
   assertDeploymentTarget(installer)
+=======
+platform :ios, '14.0'
+
+use_frameworks!
+
+target 'App' do
+  # Add Capacitor dependencies
+  pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+
+  # Additional dependencies (if any)
+>>>>>>> 1dfb46994cd0d8b194efbe9a6105231cb35a1ec7
 end
